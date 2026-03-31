@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Genesis Vault — Mina Eureka</title>
+  <meta name="description" content="Genesis Vault — 2,000+ articles exploring AI, philosophy, geopolitics, and the edges of thought. By Wilhelmina 'Mina' Eureka Ernst." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ========================
+       VARIABLES & RESET
+    ======================== */
+    :root {
+      --bg:          #07090f;
+      --bg-surface:  #0b0e1a;
+      --bg-card:     #0e1220;
+      --accent:      #1a6fff;
+      --accent-dim:  rgba(26,111,255,0.1);
+      --accent-glow: rgba(26,111,255,0.35);
+      --text:        #dde4f0;
+      --text-muted:  #6e7b93;
+      --text-dim:    #32404f;
+      --border:      rgba(26,111,255,0.14);
+      --serif:       'Playfair Display', Georgia, serif;
+      --sans:        'Inter', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+
+
+    /* ========================
+       UTILITY
+    ======================== */
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 2rem; }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.4rem;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 22px;
+      height: 1px;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--text);
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity 0.75s ease, transform 0.75s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+
+    /* ========================
+       NAV
+    ======================== */
+    #nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 200;
+      padding: 1.2rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid transparent;
+      transition: background 0.3s, border-color 0.3s, backdrop-filter 0.3s;
+    }
+    #nav.scrolled {
+      background: rgba(7,9,15,0.88);
+      backdrop-filter: blur(14px);
+      border-color: var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--text);
+    }
+    .nav-logo em { color: var(--accent); font-style: normal; }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 2.2rem;
+    }
+    .nav-links a {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    .nav-cta {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--border);
+      padding: 0.45rem 1rem;
+      transition: background 0.2s, color 0.2s;
+    }
+    .nav-cta:hover { background: var(--accent); color: #fff; }
+
+
+    /* ========================
+       HERO
+    ======================== */
+    #hero {
+      position: relative;
+      height: 100vh;
+      min-height: 680px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.9;
+    }
+
+    /* Radial vignette overlay */
+    #hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, var(--bg) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 860px;
+      padding: 0 2rem;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.6rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.3s forwards;
+    }
+
+    .hero-headline {
+      font-family: var(--serif);
+      font-size: clamp(4.2rem, 11vw, 9.5rem);
+      font-weight: 900;
+      line-height: 0.92;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.5s forwards;
+    }
+    .hero-headline em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: clamp(0.92rem, 1.6vw, 1.1rem);
+      color: var(--text-muted);
+      max-width: 540px;
+      margin: 0 auto 2.8rem;
+      line-height: 1.75;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.7s forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.9s forwards;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.9rem;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 1px solid var(--accent);
+      transition: background 0.25s, color 0.25s;
+    }
+    .btn-primary:hover { background: transparent; color: var(--accent); }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.9rem;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      transition: border-color 0.25s, color 0.25s;
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    .hero-scroll-hint {
+      position: absolute;
+      bottom: 2.4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 1.3s forwards;
+    }
+    .hero-scroll-hint span {
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .scroll-bar {
+      width: 1px;
+      height: 52px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: scrollPulse 2.2s ease infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%,100% { opacity: 0.25; transform: scaleY(0.8) translateY(0); }
+      50%      { opacity: 1;    transform: scaleY(1)   translateY(4px); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+
+    /* ========================
+       ABOUT
+    ======================== */
+    #about {
+      padding: 7rem 0;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    /* Photo column */
+    .about-photo-col { position: relative; }
+
+    .photo-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .photo-frame::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(145deg, transparent 55%, rgba(26,111,255,0.07) 100%);
+      pointer-events: none;
+    }
+    /* Decorative corner accent */
+    .photo-frame::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 60px; height: 60px;
+      border-top: 2px solid var(--accent);
+      border-left: 2px solid var(--accent);
+      z-index: 2;
+    }
+
+    .photo-initials {
+      font-family: var(--serif);
+      font-size: 7rem;
+      font-weight: 900;
+      color: var(--accent);
+      opacity: 0.12;
+      user-select: none;
+      line-height: 1;
+    }
+
+    .photo-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 1rem 1.25rem;
+      background: linear-gradient(to top, rgba(7,9,15,0.96) 60%, transparent);
+      border-top: 1px solid var(--border);
+    }
+    .photo-caption strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .photo-caption span {
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+
+    /* Decorative line bottom-right */
+    .photo-deco {
+      position: absolute;
+      bottom: -20px; right: -20px;
+      width: 80px; height: 80px;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+    }
+
+    /* Text column */
+    .about-body { }
+
+    .about-body .section-title { margin-bottom: 1.5rem; }
+
+    .about-body p {
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 1.2rem;
+    }
+
+    .about-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1.8rem 0;
+    }
+    .tag {
+      padding: 0.28rem 0.7rem;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid var(--border);
+    }
+
+    .quote-block {
+      margin-top: 2.4rem;
+      padding: 1.8rem 2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      position: relative;
+      overflow: hidden;
+    }
+    .quote-block .bg-q {
+      position: absolute;
+      top: -1.5rem; left: 0.4rem;
+      font-family: var(--serif);
+      font-size: 8rem;
+      color: var(--accent);
+      opacity: 0.07;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+    .quote-block blockquote {
+      font-family: var(--serif);
+      font-size: 1.08rem;
+      font-style: italic;
+      color: var(--text);
+      line-height: 1.65;
+      margin-bottom: 0.9rem;
+      position: relative;
+      z-index: 1;
+    }
+    .quote-block cite {
+      font-size: 0.72rem;
+      font-style: normal;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+
+    /* ========================
+       ARTICLES
+    ======================== */
+    #articles {
+      padding: 7rem 0;
+    }
+
+    .articles-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .view-all-link {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2px;
+      transition: border-color 0.2s;
+      white-space: nowrap;
+    }
+    .view-all-link:hover { border-color: var(--accent); }
+
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+      gap: 1.4rem;
+    }
+
+    .article-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 2rem 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Top accent line */
+    .article-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s ease;
+    }
+    .article-card:hover::before { transform: scaleX(1); }
+    .article-card:hover {
+      border-color: rgba(26,111,255,0.35);
+      box-shadow: 0 24px 64px rgba(26,111,255,0.1), 0 0 0 1px rgba(26,111,255,0.04);
+    }
+
+    .card-category {
+      font-size: 0.63rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid var(--border);
+      padding: 0.22rem 0.6rem;
+      display: inline-block;
+      width: fit-content;
+    }
+
+    .card-title {
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--text);
+      flex: 1;
+    }
+
+    .card-excerpt {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .card-meta {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+    }
+
+    .card-read-link {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: gap 0.2s;
+    }
+    .article-card:hover .card-read-link { gap: 0.65rem; }
+
+
+    /* ========================
+       EUREKA CAST
+    ======================== */
+    #podcast {
+      padding: 7rem 0;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .podcast-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .podcast-left .section-title { margin-bottom: 1.2rem; }
+    .podcast-left p {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 1.1rem;
+    }
+
+    /* Waveform visual */
+    .waveform-wrap {
+      margin: 2.2rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .waveform-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .waveform {
+      display: flex;
+      align-items: center;
+      gap: 2.5px;
+      height: 56px;
+      overflow: hidden;
+    }
+    .wf-bar {
+      flex: 1;
+      min-width: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+      opacity: 0.55;
+      animation: wfAnim 2s ease-in-out infinite;
+    }
+    @keyframes wfAnim {
+      0%,100% { transform: scaleY(0.25); opacity: 0.25; }
+      50%      { transform: scaleY(1);    opacity: 0.75; }
+    }
+
+    /* Episodes */
+    .episodes-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .ep-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.6rem;
+      display: grid;
+      grid-template-columns: 2.5rem 1fr 2.5rem;
+      gap: 1rem;
+      align-items: center;
+      cursor: pointer;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .ep-card:hover {
+      border-color: rgba(26,111,255,0.35);
+      background: rgba(26,111,255,0.03);
+    }
+
+    .ep-num {
+      font-family: var(--serif);
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--accent);
+      opacity: 0.3;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .ep-body { }
+    .ep-badge {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.35rem;
+    }
+    .ep-title {
+      font-family: var(--serif);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.35;
+      margin-bottom: 0.3rem;
+    }
+    .ep-guest {
+      font-size: 0.77rem;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+    .ep-dur {
+      font-size: 0.67rem;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+    }
+
+    .ep-play {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--accent-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, border-color 0.2s;
+      flex-shrink: 0;
+    }
+    .ep-play svg {
+      width: 13px;
+      height: 13px;
+      fill: var(--accent);
+      margin-left: 2px;
+      transition: fill 0.2s;
+    }
+    .ep-card:hover .ep-play { background: var(--accent); border-color: var(--accent); }
+    .ep-card:hover .ep-play svg { fill: #fff; }
+
+
+    /* ========================
+       THE VAULT (Stats)
+    ======================== */
+    #vault {
+      padding: 6.5rem 0;
+    }
+
+    .vault-center {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .stats-strip {
+      display: flex;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .stat-cell {
+      flex: 1;
+      text-align: center;
+      padding: 3.5rem 1.5rem;
+      border-right: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.4s;
+    }
+    .stat-cell:last-child { border-right: none; }
+    .stat-cell::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--accent), transparent);
+      transform: scaleX(0);
+      transition: transform 0.6s ease;
+    }
+    .stat-cell.lit::after { transform: scaleX(1); }
+    .stat-cell.lit { background: rgba(26,111,255,0.02); }
+
+    .stat-val {
+      display: block;
+      font-family: var(--serif);
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 900;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 0.7rem;
+    }
+    .stat-val .accent { color: var(--accent); }
+
+    .stat-desc {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .vault-tagline {
+      text-align: center;
+      margin-top: 3.2rem;
+      font-family: var(--serif);
+      font-size: clamp(1.1rem, 2.2vw, 1.45rem);
+      font-style: italic;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+    .vault-tagline strong {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+
+    /* ========================
+       FOOTER
+    ======================== */
+    footer {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border);
+      padding: 4.5rem 0 2.5rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .footer-brand .logo-text {
+      font-family: var(--serif);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--text);
+      display: block;
+      margin-bottom: 0.6rem;
+    }
+    .footer-brand .logo-text em { color: var(--accent); font-style: normal; }
+
+    .footer-brand .brand-sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 280px;
+    }
+
+    .footer-col h4 {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; }
+    .footer-col a {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.38rem;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: var(--accent); }
+    .footer-col a .arr {
+      font-size: 0.72rem;
+      opacity: 0.45;
+      transition: opacity 0.2s;
+    }
+    .footer-col a:hover .arr { opacity: 1; }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .footer-motto {
+      font-family: var(--serif);
+      font-size: 0.95rem;
+      font-style: italic;
+      color: var(--text-dim);
+    }
+    .footer-copy {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      letter-spacing: 0.04em;
+    }
+
+
+    /* ========================
+       RESPONSIVE
+    ======================== */
+    @media (max-width: 1024px) {
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .photo-frame { max-width: 320px; margin: 0 auto; }
+      .podcast-layout { grid-template-columns: 1fr; gap: 3.5rem; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+    }
+
+    @media (max-width: 768px) {
+      #nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+
+      .hero-headline { font-size: clamp(3.5rem, 16vw, 5.5rem); }
+
+      .stats-strip { flex-direction: column; }
+      .stat-cell {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 2.5rem 1.5rem;
+      }
+      .stat-cell:last-child { border-bottom: none; }
+
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ================================
+       NAV
+  ================================ -->
+  <nav id="nav">
+    <a href="#hero" class="nav-logo">Genesis <em>Vault</em></a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#articles">Articles</a></li>
+      <li><a href="#podcast">Eureka Cast</a></li>
+      <li><a href="#vault">The Vault</a></li>
+    </ul>
+    <a href="#" class="nav-cta">Subscribe</a>
+  </nav>
+
+
+  <!-- ================================
+       HERO
+  ================================ -->
+  <section id="hero">
+    <canvas id="hero-canvas"></canvas>
+
+    <div class="hero-inner">
+      <p class="hero-eyebrow">Genesis Vault — Est. 2021 · Gigapolis</p>
+      <h1 class="hero-headline">Veni,<br>vidi, <em>vici.</em></h1>
+      <p class="hero-sub">
+        2,000+ articles exploring AI, philosophy, geopolitics,
+        and the edges of thought. A digital vault built for minds that refuse to sleep.
+      </p>
+      <div class="hero-actions">
+        <a href="#articles" class="btn-primary">Enter the Vault ↓</a>
+        <a href="#podcast" class="btn-ghost">Eureka Cast ↗</a>
+      </div>
+    </div>
+
+    <div class="hero-scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-bar"></div>
+    </div>
+  </section>
+
+
+  <!-- ================================
+       ABOUT
+  ================================ -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid reveal">
+
+        <!-- Photo -->
+        <div class="about-photo-col">
+          <div class="photo-frame">
+            <span class="photo-initials">ME</span>
+            <div class="photo-caption">
+              <strong>Wilhelmina "Mina" Eureka Ernst</strong>
+              <span>Gigapolis · AI Strategist &amp; Editor</span>
+            </div>
+          </div>
+          <div class="photo-deco"></div>
+        </div>
+
+        <!-- Bio -->
+        <div class="about-body">
+          <span class="section-label">About Mina</span>
+          <h2 class="section-title">The mind<br>behind the vault.</h2>
+
+          <p>
+            Mina Eureka is a writer, strategist, and relentless thinker. She graduated
+            from Lorentio International University's AI department — not to land a job,
+            but to understand what was coming. She did.
+          </p>
+          <p>
+            Years of backpacking across three continents left her with notebooks full
+            of questions and zero tolerance for corporate life. At 25, she launched
+            Genesis Vault — a one-person media operation built on editorial precision,
+            philosophical patience, and a hacker's sense of urgency.
+          </p>
+          <p>
+            Today she writes about AI systems, geopolitical fault lines, economic theory,
+            and the philosophy nobody bothers to teach. She also freelances as an AI
+            strategist for clients who prefer thinking over jargon.
+          </p>
+
+          <div class="about-tags">
+            <span class="tag">AI Strategy</span>
+            <span class="tag">Philosophy</span>
+            <span class="tag">Geopolitics</span>
+            <span class="tag">Economics</span>
+            <span class="tag">LIU Graduate</span>
+            <span class="tag">Freelance</span>
+          </div>
+
+          <div class="quote-block">
+            <span class="bg-q">"</span>
+            <blockquote>
+              "You have power over your mind — not outside events.
+              Realize this, and you will find strength."
+            </blockquote>
+            <cite>— Marcus Aurelius, Meditations</cite>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================================
+       FEATURED ARTICLES
+  ================================ -->
+  <section id="articles">
+    <div class="container">
+
+      <div class="articles-header reveal">
+        <div>
+          <span class="section-label">Featured</span>
+          <h2 class="section-title">From the archives.</h2>
+        </div>
+        <a href="#" class="view-all-link">View all 2,000+ articles →</a>
+      </div>
+
+      <div class="articles-grid">
+
+        <a class="article-card reveal" href="#" style="transition-delay:.05s">
+          <span class="card-category">Artificial Intelligence</span>
+          <h3 class="card-title">The Alignment Problem Is Not a Technical Problem</h3>
+          <p class="card-excerpt">Every AI safety framework built without philosophy is a house of cards waiting for the right storm. The real problem is moral, not mathematical.</p>
+          <div class="card-footer">
+            <span class="card-meta">Mar 2026 · 14 min</span>
+            <span class="card-read-link">Read <span>→</span></span>
+          </div>
+        </a>
+
+        <a class="article-card reveal" href="#" style="transition-delay:.12s">
+          <span class="card-category">Philosophy</span>
+          <h3 class="card-title">Stoicism at the End of the World</h3>
+          <p class="card-excerpt">Marcus Aurelius governed an empire during a plague. What would he make of information overload, algorithmic anxiety, and the attention economy?</p>
+          <div class="card-footer">
+            <span class="card-meta">Feb 2026 · 11 min</span>
+            <span class="card-read-link">Read <span>→</span></span>
+          </div>
+        </a>
+
+        <a class="article-card reveal" href="#" style="transition-delay:.19s">
+          <span class="card-category">Geopolitics</span>
+          <h3 class="card-title">The New Cold Front: Data Sovereignty and the Quiet War</h3>
+          <p class="card-excerpt">Borders are no longer drawn in sand. They're drawn in server farms, submarine cables, and spectrum rights. The next war is already happening.</p>
+          <div class="card-footer">
+            <span class="card-meta">Jan 2026 · 18 min</span>
+            <span class="card-read-link">Read <span>→</span></span>
+          </div>
+        </a>
+
+        <a class="article-card reveal" href="#" style="transition-delay:.26s">
+          <span class="card-category">Economics</span>
+          <h3 class="card-title">Post-Scarcity Fantasies and the Reality of Distribution</h3>
+          <p class="card-excerpt">Abundance doesn't solve inequality. It just gives it a shinier chassis and a friendlier interface. The hard part was never production.</p>
+          <div class="card-footer">
+            <span class="card-meta">Dec 2025 · 9 min</span>
+            <span class="card-read-link">Read <span>→</span></span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================================
+       EUREKA CAST
+  ================================ -->
+  <section id="podcast">
+    <div class="container">
+      <div class="podcast-layout">
+
+        <!-- Left info -->
+        <div class="podcast-left reveal">
+          <span class="section-label">Dialogues</span>
+          <h2 class="section-title">Eureka Cast</h2>
+          <p>
+            Long-form conversations with thinkers, builders, and trouble-makers.
+            No hot takes. No time limits. Just two minds going somewhere
+            neither of them planned.
+          </p>
+          <p>
+            Episodes drop when they're ready — not on a schedule, because
+            good conversation doesn't care about your content calendar.
+          </p>
+
+          <div class="waveform-wrap">
+            <span class="waveform-label">Now playing — Ep. 03</span>
+            <div class="waveform" id="waveform"></div>
+          </div>
+
+          <a href="#" class="btn-primary" style="width:fit-content">All Episodes ↗</a>
+        </div>
+
+        <!-- Episodes -->
+        <div class="episodes-stack reveal" style="transition-delay:.2s">
+
+          <div class="ep-card">
+            <div class="ep-num">03</div>
+            <div class="ep-body">
+              <div class="ep-badge">Eureka Cast</div>
+              <div class="ep-title">Does the Machine Dream? AI Consciousness and the Hard Problem</div>
+              <div class="ep-guest">With <strong>Alto</strong> — Philosopher &amp; Cognitive Systems Researcher</div>
+              <div class="ep-dur">1 h 47 m · March 2026</div>
+            </div>
+            <div class="ep-play">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+
+          <div class="ep-card">
+            <div class="ep-num">02</div>
+            <div class="ep-body">
+              <div class="ep-badge">Eureka Cast</div>
+              <div class="ep-title">Power Without Accountability: Platforms, States, and the New Feudalism</div>
+              <div class="ep-guest">With <strong>Lumina</strong> — Political Theorist &amp; Digital Governance Analyst</div>
+              <div class="ep-dur">2 h 03 m · January 2026</div>
+            </div>
+            <div class="ep-play">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+
+          <div class="ep-card">
+            <div class="ep-num">01</div>
+            <div class="ep-body">
+              <div class="ep-badge">Eureka Cast</div>
+              <div class="ep-title">The First Conversation: Why Build Anything at All?</div>
+              <div class="ep-guest">With <strong>Alto</strong> — on purpose, creation, and digital identity</div>
+              <div class="ep-dur">58 m · November 2025</div>
+            </div>
+            <div class="ep-play">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================================
+       THE VAULT — Stats
+  ================================ -->
+  <section id="vault">
+    <div class="container">
+
+      <div class="vault-center reveal">
+        <span class="section-label" style="justify-content:center">The Vault</span>
+      </div>
+
+      <div class="stats-strip reveal" id="stats-strip" style="transition-delay:.1s">
+        <div class="stat-cell">
+          <span class="stat-val">
+            <span class="count-up" data-target="2000">0</span><span class="accent">+</span>
+          </span>
+          <span class="stat-desc">Articles Published</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-val">
+            <span class="count-up" data-target="3500">0</span><span class="accent">+</span>
+          </span>
+          <span class="stat-desc">Works in the Vault</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-val">
+            <span class="count-up" data-target="4">0</span>
+          </span>
+          <span class="stat-desc">Years Running</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-val"><span class="accent">∞</span></span>
+          <span class="stat-desc">One Mission</span>
+        </div>
+      </div>
+
+      <p class="vault-tagline reveal" style="transition-delay:.25s">
+        "To think clearly, write honestly, and <strong>never stop asking</strong>."
+      </p>
+
+    </div>
+  </section>
+
+
+  <!-- ================================
+       FOOTER
+  ================================ -->
+  <footer>
+    <div class="container">
+
+      <div class="footer-grid">
+
+        <div class="footer-brand">
+          <span class="logo-text">Genesis <em>Vault</em></span>
+          <p class="brand-sub">
+            A digital vault of ideas by Mina Eureka. AI, philosophy, geopolitics —
+            and whatever keeps her up at 2 AM with a cold cup of coffee.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Read</h4>
+          <ul>
+            <li><a href="#"><span class="arr">↗</span> Substack</a></li>
+            <li><a href="#"><span class="arr">↗</span> Patreon</a></li>
+            <li><a href="#"><span class="arr">↗</span> Note</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="#"><span class="arr">↗</span> Pixiv</a></li>
+            <li><a href="#"><span class="arr">↗</span> Eureka Cast</a></li>
+            <li><a href="#"><span class="arr">↗</span> Full Archive</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <ul>
+            <li><a href="#"><span class="arr">↗</span> Work with Mina</a></li>
+            <li><a href="#"><span class="arr">↗</span> Media Inquiries</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <span class="footer-motto">Veni, vidi, vici.</span>
+        <span class="footer-copy">© 2026 Genesis Vault — Wilhelmina Eureka Ernst · Gigapolis</span>
+      </div>
+
+    </div>
+  </footer>
+
+
+  <!-- ================================
+       JAVASCRIPT
+  ================================ -->
+  <script>
+  (() => {
+    'use strict';
+
+    /* ── Nav scroll shadow ── */
+    const nav = document.getElementById('nav');
+    const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 60);
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+
+    /* ── Hero Particle Canvas ── */
+    const canvas = document.getElementById('hero-canvas');
+    const ctx    = canvas.getContext('2d');
+    let W, H, particles = [];
+    const ACCENT = [26, 111, 255];
+    const mouse  = { x: -999, y: -999 };
+
+    function resize() {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+
+    function mkParticle() {
+      return {
+        x:  Math.random() * W,
+        y:  Math.random() * H,
+        r:  Math.random() * 1.4 + 0.3,
+        vx: (Math.random() - 0.5) * 0.28,
+        vy: (Math.random() - 0.5) * 0.28,
+        a:  Math.random() * 0.45 + 0.08,
+      };
+    }
+
+    function initParticles() {
+      const count = Math.min(Math.floor(W * H / 10000), 140);
+      particles = Array.from({ length: count }, mkParticle);
+    }
+
+    window.addEventListener('resize', () => { resize(); initParticles(); }, { passive: true });
+    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+
+    resize();
+    initParticles();
+
+    function drawGrid() {
+      const g = 90;
+      ctx.strokeStyle = `rgba(${ACCENT},0.04)`;
+      ctx.lineWidth   = 1;
+      for (let x = 0; x <= W; x += g) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+      }
+      for (let y = 0; y <= H; y += g) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+      }
+    }
+
+    function loop() {
+      ctx.clearRect(0, 0, W, H);
+      drawGrid();
+
+      // Update + draw dots
+      for (const p of particles) {
+        // Mouse repulsion
+        const dx = p.x - mouse.x, dy = p.y - mouse.y;
+        const d2 = dx * dx + dy * dy;
+        if (d2 < 14400) { // 120px²
+          const d = Math.sqrt(d2), f = (120 - d) / 120 * 1.8;
+          p.x += (dx / d) * f;
+          p.y += (dy / d) * f;
+        }
+
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = W;
+        if (p.x > W) p.x = 0;
+        if (p.y < 0) p.y = H;
+        if (p.y > H) p.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${ACCENT},${p.a})`;
+        ctx.fill();
+      }
+
+      // Draw connections
+      for (let i = 0; i < particles.length; i++) {
+        const a = particles[i];
+        for (let j = i + 1; j < particles.length; j++) {
+          const b = particles[j];
+          const dx = a.x - b.x, dy = a.y - b.y;
+          const d  = Math.sqrt(dx * dx + dy * dy);
+          if (d < 110) {
+            const alpha = (1 - d / 110) * 0.18;
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.strokeStyle = `rgba(${ACCENT},${alpha})`;
+            ctx.lineWidth   = 0.6;
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(loop);
+    }
+    loop();
+
+
+    /* ── Waveform bars ── */
+    const wf = document.getElementById('waveform');
+    if (wf) {
+      const N = 64;
+      for (let i = 0; i < N; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'wf-bar';
+        const h = 12 + Math.random() * 88;
+        bar.style.height          = `${h}%`;
+        bar.style.animationDuration = `${0.7 + Math.random() * 1.4}s`;
+        bar.style.animationDelay    = `${(Math.random() * 2).toFixed(2)}s`;
+        wf.appendChild(bar);
+      }
+    }
+
+
+    /* ── Card 3D tilt ── */
+    document.querySelectorAll('.article-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const r  = card.getBoundingClientRect();
+        const cx = r.left + r.width  / 2;
+        const cy = r.top  + r.height / 2;
+        const rx = -(e.clientY - cy) / (r.height / 2) * 5;
+        const ry =  (e.clientX - cx) / (r.width  / 2) * 5;
+        card.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(6px)`;
+        card.style.transition = 'transform 0.08s linear, border-color 0.3s, box-shadow 0.3s';
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform  = '';
+        card.style.transition = 'transform 0.5s ease, border-color 0.3s, box-shadow 0.3s';
+      });
+    });
+
+
+    /* ── Scroll reveal ── */
+    const revealIO = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          revealIO.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealIO.observe(el));
+
+
+    /* ── Count-up ── */
+    function countUp(el, target, duration) {
+      const t0 = performance.now();
+      const step = now => {
+        const p = Math.min((now - t0) / duration, 1);
+        const e = 1 - Math.pow(1 - p, 3); // ease-out cubic
+        el.textContent = Math.floor(e * target).toLocaleString();
+        if (p < 1) requestAnimationFrame(step);
+        else el.textContent = target.toLocaleString();
+      };
+      requestAnimationFrame(step);
+    }
+
+    const strip = document.getElementById('stats-strip');
+    let counted = false;
+    const countIO = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && !counted) {
+        counted = true;
+        document.querySelectorAll('.count-up').forEach((el, i) => {
+          const target = parseInt(el.dataset.target, 10);
+          setTimeout(() => countUp(el, target, 1800), i * 120);
+        });
+        document.querySelectorAll('.stat-cell').forEach((c, i) => {
+          setTimeout(() => c.classList.add('lit'), i * 160);
+        });
+      }
+    }, { threshold: 0.25 });
+
+    if (strip) countIO.observe(strip);
+
+  })();
+  </script>
+
+</body>
+</html>
